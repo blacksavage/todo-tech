@@ -2,8 +2,9 @@ const path = require('path')
 const webpack = require('webpack')
 const vueLoaderPlugin = require('vue-loader/lib/plugin')
 const HTMLPlugin = require('html-webpack-plugin')
+const ExtractPlugin = require('extract-text-webpack-plugin')
 
-const isDev = process.env.NODE_ENV = 'development'
+const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
     // https://webpack.js.org/configuration/target/
@@ -13,7 +14,7 @@ const config = {
     entry: path.join(__dirname, 'src/index.js'),
     // 输出
     output: {
-        filename: 'bundle.js',
+        filename: 'bundle.[hash:8].js',
         path: path.join(__dirname, 'dist')
     },
     module: {
@@ -25,28 +26,6 @@ const config = {
             {
                 test: /\.jsx/,
                 loader: 'babel-loader'
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
-            },
-            {
-                test: /\.styl(us)?$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                        options: {
-                            // 如果stylus-loader生成了sourceMap，则直接使用stylus-loader生成的sourceMap，提升编译效率
-                            sourceMap: true
-                        }
-                    },
-                    'stylus-loader'
-                ]
             },
             {
                 test: /\.(png|jpg|jpeg|gif|svg)/,
@@ -74,14 +53,30 @@ const config = {
         // html编译
         new HTMLPlugin(),
         // vue-loader
-        new vueLoaderPlugin(),
-
+        new vueLoaderPlugin()
     ]
 }
 
 if (isDev) {
     // 方便调试代码，不然展示的是编译后的代码
     config.devtool = '#cheap-module-eval-source-map'
+    config.module.rules.push(
+        {
+            test: /\.styl(us)?$/,
+            use: [
+                'style-loader',
+                'css-loader',
+                {
+                    loader: 'postcss-loader',
+                    options: {
+                        // 如果stylus-loader生成了sourceMap，则直接使用stylus-loader生成的sourceMap，提升编译效率
+                        sourceMap: true
+                    }
+                },
+                'stylus-loader'
+            ]
+        },
+    )
     config.devServer = {
         port: 8000,
         host: '0.0.0.0',
@@ -98,6 +93,33 @@ if (isDev) {
         // 配合 hot: true
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin()
+    )
+} else {
+    config.entry = {
+        app: path.join(__dirname, 'src/index.js'),
+        vendor: ['vue']
+    }
+    config.output.filename = '[name].[chunkhash:8].js'
+    config.module.rules.push(
+        {
+            test: /\.styl(us)?$/,
+            use: ExtractPlugin.extract({
+                fallback: 'style-loader',
+                use: [
+                    'css-loader',
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            sourceMap: true,
+                        }
+                    },
+                    'stylus-loader'
+                ]
+            })
+        },
+    )
+    config.plugins.push(
+        new ExtractPlugin('styles.[contentHash:8].css'),
     )
 }
 
