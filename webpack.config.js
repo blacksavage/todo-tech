@@ -11,7 +11,7 @@ const config = {
     // 为类浏览器的环境提供编译
     target: 'web',
     // 入口文件
-    entry: path.join(__dirname, 'src/index.js'),
+    entry: path.join(__dirname, 'client/index.js'),
     // 输出
     output: {
         filename: 'bundle.[hash:8].js',
@@ -96,7 +96,7 @@ if (isDev) {
     )
 } else {
     config.entry = {
-        app: path.join(__dirname, 'src/index.js'),
+        app: path.join(__dirname, 'client/index.js'),
         vendor: ['vue']
     }
     config.output.filename = '[name].[chunkhash:8].js'
