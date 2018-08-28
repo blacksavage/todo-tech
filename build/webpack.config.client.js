@@ -10,105 +10,112 @@ const baseConfig = require('./webpack.config.base')
 const isDev = process.env.NODE_ENV === 'development'
 
 const defaultPlugins = [
-    new webpack.DefinePlugin({
-        // 告诉webpack是什么环境，然后打包对应的文件
-        'process.env': {
-            NODE_ENV: isDev ? '"development"' : '"production"'
-        }
-    }),
-    // 生成html文件
-    new HTMLPlugin(),
-    // 处理vue文件
-    new VueLoaderPlugin()
+  new webpack.DefinePlugin({
+    // 告诉webpack是什么环境，然后打包对应的文件
+    'process.env': {
+      NODE_ENV: isDev ? '"development"' : '"production"'
+    }
+  }),
+  // 生成html文件
+  new HTMLPlugin(),
+  // 处理vue文件
+  new VueLoaderPlugin()
 ]
 
 const devServer = {
-    port: 8000,
-    host: '0.0.0.0',
-    // 编译过程的错误显示到网页上
-    overlay: {
-        errors: true
-    },
-    // 启动的时候自动打开浏览器
-    open: false,
-    // 修改代码后只重新加载当前组件，防止页面刷新数据丢失
-    hot: true
+  port: 8000,
+  host: '0.0.0.0',
+  // 编译过程的错误显示到网页上
+  overlay: {
+    errors: true
+  },
+  // 启动的时候自动打开浏览器
+  open: false,
+  // 修改代码后只重新加载当前组件，防止页面刷新数据丢失
+  hot: true
 }
 
 let config
 
 if (isDev) {
-    config = merge(baseConfig, {
-        // 方便调试代码，不然展示的是编译后的代码
-        devtool: '#cheap-module-eval-source-map',
-        module: {
-            rules: [
-                {
-                    test: /\.styl(us)?$/,
-                    use: [
-                        // 让vue文件内的样式热加载(同时也可以处理.css .styl等文件)
-                        'vue-style-loader',
-                        'css-loader',
-                        {
-                            loader: 'postcss-loader',
-                            options: {
-                                // 如果stylus-loader生成了sourceMap，则直接使用stylus-loader生成的sourceMap，提升编译效率
-                                sourceMap: true
-                            }
-                        },
-                        'stylus-loader'
-                    ]
-                }
-            ]
-        },
-        devServer,
-        plugins: defaultPlugins.concat([
-            // 配合 hot: true
-            new webpack.HotModuleReplacementPlugin(),
-            new webpack.NoEmitOnErrorsPlugin()
-        ])
-    })
+  config = merge(baseConfig, {
+    // 方便调试代码，不然展示的是编译后的代码
+    devtool: '#cheap-module-eval-source-map',
+    module: {
+      rules: [
+        {
+          test: /\.styl(us)?$/,
+          use: [
+            // 让vue文件内的样式热加载(同时也可以处理.css .styl等文件)
+            'vue-style-loader',
+            'css-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                // 如果stylus-loader生成了sourceMap，则直接使用stylus-loader生成的sourceMap，提升编译效率
+                sourceMap: true
+              }
+            },
+            'stylus-loader'
+          ]
+        }
+      ]
+    },
+    devServer,
+    plugins: defaultPlugins.concat([
+      // 配合 hot: true
+      new webpack.HotModuleReplacementPlugin()
+      // new webpack.NoEmitOnErrorsPlugin()
+    ])
+  })
 } else {
-    config = merge(baseConfig, {
-        // 入口文件
-        entry: {
-            app: path.join(__dirname, '../client/index.js'),
-            vendor: ['vue']
-        },
-        output: {
-            filename: '[name].[chunkhash:8].js'
-        },
-        module: {
-            rules: [
-                {
-                    test: /\.styl(us)?$/,
-                    use: ExtractPlugin.extract({
-                        fallback: 'vue-style-loader',
-                        use: [
-                            'css-loader',
-                            {
-                                loader: 'postcss-loader',
-                                options: {
-                                    sourceMap: true,
-                                }
-                            },
-                            'stylus-loader'
-                        ]
-                    })
+  config = merge(baseConfig, {
+    // 入口文件
+    entry: {
+      app: path.join(__dirname, '../client/index.js')
+      // vendor: ['vue']
+    },
+    output: {
+      filename: '[name].[chunkhash:8].js'
+    },
+    module: {
+      rules: [
+        {
+          test: /\.styl(us)?$/,
+          use: ExtractPlugin.extract({
+            fallback: 'vue-style-loader',
+            use: [
+              'css-loader',
+              {
+                loader: 'postcss-loader',
+                options: {
+                  sourceMap: true,
                 }
+              },
+              'stylus-loader'
             ]
-        },
-        plugins: defaultPlugins.concat([
-            // 将css单独打包一个文件
-            new ExtractPlugin('styles.[contentHash:8].css'),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'vendor'
-            }),
-            new webpack.optimize.CommonsChunkPlugin({
-                name: 'runtime'
-            })
-        ])
-    })
+          })
+        }
+      ]
+    },
+    optimization: {
+      splitChunks: {
+        chunks: 'all'
+      },
+      runtimeChunk: true
+    },
+    plugins: defaultPlugins.concat([
+      // 将css单独打包一个文件
+      new ExtractPlugin('styles.[hash:8].css')
+      // CommonsChunkPlugin 在 webpack4 被废弃
+      // new webpack.optimize.CommonsChunkPlugin({
+      //   name: 'vendor'
+      // }),
+      // new webpack.optimize.CommonsChunkPlugin({
+      //   name: 'runtime'
+      // })
+    ])
+  })
 }
 
 module.exports = config
