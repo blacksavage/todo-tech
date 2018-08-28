@@ -17,6 +17,13 @@ const config = {
     module: {
         rules: [
             {
+                test: /\.(vue|js|jsx)$/,
+                loader: 'eslint-loader',
+                exclude: /node_modules/,
+                // 预处理：在进行别的loader处理前，先进行eslint的处理(post：后处理)
+                enforce: 'pre'
+            },
+            {
                 test: /\.vue$/,
                 loader: 'vue-loader',
                 options: createVueLoaderOptions(isDev)

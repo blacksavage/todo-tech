@@ -4,6 +4,9 @@ module.exports = (isDev) => {
         preserveWhitepace: true,
         // 将vue文件内的css单独打包到一个文件
         extractCSS: !isDev,
-        cssModules: {}
+        cssModules: {
+            localIdentName: isDev ? '[path]-[name]-[hash:base64:5]' : '[hash:base64:5]',
+            camelCase: true
+        }
     }
 }
