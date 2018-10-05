@@ -16,8 +16,10 @@ const defaultPlugins = [
       NODE_ENV: isDev ? '"development"' : '"production"'
     }
   }),
-  // 生成html文件
-  new HTMLPlugin(),
+  // 生成html文件(or 用template绑定到一个html上)
+  new HTMLPlugin({
+    template: path.join(__dirname, 'template.html')
+  }),
   // 处理vue文件
   new VueLoaderPlugin()
 ]
@@ -28,6 +30,11 @@ const devServer = {
   // 编译过程的错误显示到网页上
   overlay: {
     errors: true
+  },
+  // router设置为history之后，由于前段的路径和后端不同，导致后端找不到页面，所以要指定默认渲染的html
+  // 指定的文件路径为HTMLPlugin生成的html
+  historyApiFallback: {
+    index: '/index.html'
   },
   // 启动的时候自动打开浏览器
   open: false,
