@@ -25,9 +25,7 @@
 <script>
   import Item from './item.vue'
   import Tabs from './tabs.vue'
-
   let id = 0
-
   export default {
     data () {
       return {
@@ -81,7 +79,6 @@
     margin 0 auto
     box-shadow 0 0 5px #666
   }
-
   .add-input {
     position: relative;
     margin: 0;

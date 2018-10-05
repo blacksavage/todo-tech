@@ -48,7 +48,6 @@ config = merge(baseConfig, {
     ]
   },
   devServer,
-  // import Vue from 'vue'
   resolve: {
     alias: {
       'vue': path.join(__dirname, '../node_modules/vue/dist/vue.esm.js')
