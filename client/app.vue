@@ -15,13 +15,13 @@
 
 <script>
   import Header from './layout/header.vue'
-  import Todo from './views/todo/todo.vue'
+  // import Todo from './views/todo/todo.vue'
   import Footer from './layout/footer.jsx'
 
   export default {
     components: {
       Header,
-      Todo,
+      // Todo,
       Footer
     }
   }

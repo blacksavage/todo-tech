@@ -6,6 +6,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const HTMLPlugin = require('html-webpack-plugin')
 const ExtractPlugin = require('extract-text-webpack-plugin')
 const baseConfig = require('./webpack.config.base')
+const VueClientPlugin = require('vue-server-renderer/client-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -21,7 +22,8 @@ const defaultPlugins = [
     template: path.join(__dirname, 'template.html')
   }),
   // 处理vue文件
-  new VueLoaderPlugin()
+  new VueLoaderPlugin(),
+  new VueClientPlugin()
 ]
 
 const devServer = {
@@ -96,7 +98,7 @@ if (isDev) {
               {
                 loader: 'postcss-loader',
                 options: {
-                  sourceMap: true,
+                  sourceMap: true
                 }
               },
               'stylus-loader'

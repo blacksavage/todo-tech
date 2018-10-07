@@ -27,13 +27,21 @@
   import Tabs from './tabs.vue'
   let id = 0
   export default {
+    // beforeRouteEnter (to, from, next) {
+    //   console.log(this)
+    //   next()
+    // },
+    // beforeRouteUpdate (to, from, next) {
+    //   console.log(this)
+    //   next()
+    // },
     data () {
       return {
         todos: [],
         filter: 'all'
       }
     },
-    props: ['id'],
+    // props: ['id'],
     computed: {
       filteredTodos () {
         if (this.filter === 'all') {
@@ -44,8 +52,8 @@
       }
     },
     mounted () {
-      console.log(this.$route)
-      console.log(this.id)
+      // console.log(this.$route)
+      // console.log(this.id)
     },
     methods: {
       addTodo (e) {
