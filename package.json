@@ -11,7 +11,8 @@
     "lint": "eslint --ext .js --ext .vue --ext .jsx client/",
     "lint-fix": "eslint --fix --ext .js --ext .vue --ext .jsx client/",
     "precommit": "npm run lint-fix",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.config.client.js",
+    "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.config.client.js",
+    "dev:server": "cross-env NODE_ENV=development node server/server.js",
     "practice": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.config.practice.js"
   },
   "repository": {
