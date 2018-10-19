@@ -19,6 +19,9 @@
   import Footer from './layout/footer.jsx'
 
   export default {
+    metaInfo: {
+      title: '嘿嘿嘿'
+    },
     components: {
       Header,
       // Todo,
