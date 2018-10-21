@@ -36,7 +36,7 @@ const devServer = {
   // router设置为history之后，由于前段的路径和后端不同，导致后端找不到页面，所以要指定默认渲染的html
   // 指定的文件路径为HTMLPlugin生成的html
   historyApiFallback: {
-    index: '/index.html'
+    index: '/public/index.html'
   },
   // 启动的时候自动打开浏览器
   open: false,
