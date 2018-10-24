@@ -8,7 +8,7 @@
     <transition name="fade">
       <router-view/>
     </transition>
-    <notification content="test"/>
+    <button @click="notify">chick me</button>
     <Footer></Footer>
   </div>
 </template>
@@ -21,6 +21,15 @@
   export default {
     metaInfo: {
       title: '嘿嘿嘿'
+    },
+    mounted () {
+    },
+    methods: {
+      notify () {
+        this.$notify({
+          content: '提示'
+        })
+      }
     },
     components: {
       Header,
