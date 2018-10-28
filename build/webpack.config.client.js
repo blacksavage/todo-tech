@@ -33,6 +33,7 @@ const devServer = {
   overlay: {
     errors: true
   },
+  headers: {'Access-Control-Allow-Origin': '*'},
   // router设置为history之后，由于前段的路径和后端不同，导致后端找不到页面，所以要指定默认渲染的html
   // 指定的文件路径为HTMLPlugin生成的html
   historyApiFallback: {

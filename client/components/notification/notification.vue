@@ -1,8 +1,9 @@
 <template>
-  <transition name="fade">
+  <transition name="fade" @after-leave="afterLeave">
     <div
       class="notification"
       :style="style"
+      v-show="visible"
     >
       <span class="content">{{content}}</span>
       <a class="btn" @click="handleClose">{{btn}}</a>
@@ -23,6 +24,11 @@
         default: '关闭'
       }
     },
+    data () {
+      return {
+        visible: true
+      }
+    },
     computed: {
       style () {
         return {}
@@ -32,6 +38,9 @@
       handleClose (e) {
         e.preventDefault()
         this.$emit('close')
+      },
+      afterLeave () {
+        this.$emit('closed')
       }
     }
   }
