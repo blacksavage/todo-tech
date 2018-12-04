@@ -13,7 +13,15 @@
     },
     computed: {
       active () {
-        return false
+        return this.$parent.value === this.index
+      }
+    },
+    mounted () {
+      this.$parent.panes.push(this)
+    },
+    methods: {
+      handleClick () {
+        this.$parent.onChange(this.index)
       }
     },
     render () {
@@ -23,7 +31,7 @@
         active: this.active
       }
       return (
-        <li class={classNames}>
+        <li class={classNames} onClick={this.handleClick}>
           {tab}
         </li>
       )
